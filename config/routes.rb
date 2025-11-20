@@ -1,14 +1,22 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  root "products#index"
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  devise_for :users, sign_out_via: [:delete, :get]
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  # Public products
+  resources :products, only: [:index, :show]
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # Admin namespace
+  namespace :admin do
+    resources :products
+  end
+
+  # Cart and CartItems
+  resource :cart, only: [:show]
+  post   'add_to_cart/:product_id', to: 'cart_items#add',    as: 'add_to_cart'
+  delete 'remove_from_cart/:id',  to: 'cart_items#remove', as: 'remove_from_cart'
+
+  # Orders
+  resources :orders, only: [:index, :show, :create]
 end
+
