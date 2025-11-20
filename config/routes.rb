@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   # Public products
   resources :products, only: [:index, :show]
+  resources :cart_items, only: [:create, :destroy]
 
   # Admin namespace
   namespace :admin do

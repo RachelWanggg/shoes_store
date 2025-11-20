@@ -1,6 +1,11 @@
 class ProductsController < ApplicationController
   def index
-    @products = Product.all
+    @query = params[:q]
+    @min_price = params[:min_price]
+    @max_price = params[:max_price]
+    
+    @products = Product.search(@query, min_price: @min_price, max_price: @max_price)
+                       .order(:name)
   end
 
   def show

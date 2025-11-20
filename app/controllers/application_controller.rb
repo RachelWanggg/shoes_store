@@ -1,13 +1,11 @@
 class ApplicationController < ActionController::Base
   helper_method :current_cart
-  
-  
+
+  private
+
   def current_cart
-    cart = Cart.find_by(id: session[:cart_id])
-    if cart.nil?
-      cart = Cart.create
-      session[:cart_id] = cart.id
-    end
-    cart
+    return unless current_user
+
+    current_user.cart || current_user.create_cart!
   end
 end
