@@ -1,7 +1,25 @@
 class CartItemsController < ApplicationController
-  before_action :authenticate_user! # Remove this line if not using Devise
+  before_action :authenticate_user!
 
   def create
+    add_to_cart
+  end
+
+  def add
+    add_to_cart
+  end
+
+  def destroy
+    remove_from_cart
+  end
+
+  def remove
+    remove_from_cart
+  end
+
+  private
+
+  def add_to_cart
     @product = Product.find(params[:product_id])
     cart = current_cart
 
@@ -15,7 +33,7 @@ class CartItemsController < ApplicationController
     end
   end
 
-  def destroy
+  def remove_from_cart
     @cart_item = current_cart.cart_items.find(params[:id])
     @cart_item.destroy
     redirect_to root_path, notice: "Item removed from cart."

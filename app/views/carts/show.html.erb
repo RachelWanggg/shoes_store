@@ -1,14 +1,22 @@
 <h1>Your Cart</h1>
 <% if @cart.cart_items.any? %>
-<ul>
-<% @cart.cart_items.each do |item| %>
-<li>
-<%= item.product.name %> x <%= item.quantity %>
-<%= button_to 'Remove', remove_from_cart_path(item), method: :delete %>
-</li>
-<% end %>
-</ul>
-<%= button_to 'Checkout', orders_path, method: :post %>
+  <ul>
+    <% @cart.cart_items.each do |item| %>
+      <li>
+        <%= item.product.name %> x <%= item.quantity %>
+        (<%= number_to_currency(item.total_price) %>)
+        <%= button_to 'Remove', remove_from_cart_path(item), method: :delete %>
+        <% if item.product.image.attached? %>
+          <%= image_tag item.product.image, width: 300%>
+        <% else %>
+          <%= image_tag "placeholder.png", width: 300, height: 300 %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+  <p><strong>Total:</strong> <%= number_to_currency(@cart.total_price) %></p>
+  <%= button_to 'Checkout', orders_path, method: :post %>
+  <%= link_to 'Back to Products', products_path %>
 <% else %>
-<p>Your cart is empty.</p>
+  <p>Your cart is empty.</p>
 <% end %>
