@@ -1,42 +1,76 @@
-<h1>Welcome to Shoes Store</h1>
-<%= form_with url: products_path, method: :get, local: true do |f| %>
-  <%= f.text_field :q, value: params[:q], placeholder: "Search shoes..." %>
-  <%= f.text_field :min_price, value: params[:min_price], placeholder: "Min price" %>
-  <%= f.text_field :max_price, value: params[:max_price], placeholder: "Max price" %>
-  <%= f.submit "Search" %>
-<% end %>
-
-<% if @products.any? %>
-  <div class="products-grid">
-    <% @products.each do |product| %>
-      <div class="product-card">
-        <%= link_to product_path(product) do %>
-          <% if product.image.attached? %>
-            <%= image_tag product.image, width: 300%>
-          <% else %>
-            <%= image_tag "placeholder.png", width: 300, height: 300 %>
-          <% end %>
-          <h3><%= product.name %></h3>
+<div class="container">
+  <div class="header">
+    <h1>Welcome to Shoes Store</h1>
+    <div class="nav-links">
+      <% if user_signed_in? %>
+        <p style="color: white; margin: 0;">Hello, <%= current_user.email %></p>
+        <% if current_user.admin? %>
+          <%= link_to 'Admin Products', admin_products_path %>
         <% end %>
-        <p><%= number_to_currency(product.price_cents / 100.0) %></p>
-        <%= button_to "Add to Cart", cart_items_path(product_id: product.id), method: :post %>
+        <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete } %>
+      <% else %>
+        <%= link_to 'Sign In', new_user_session_path %>
+        <%= link_to 'Sign Up', new_user_registration_path %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= form_with url: products_path, method: :get, local: true, class: "search-form" do |f| %>
+    <%= f.text_field :q, value: params[:q], placeholder: "Search shoes..." %>
+    <%= f.text_field :min_price, value: params[:min_price], placeholder: "Min price" %>
+    <%= f.text_field :max_price, value: params[:max_price], placeholder: "Max price" %>
+    <%= f.submit "Search" %>
+  <% end %>
+
+  <div class="main-layout">
+    <div class="products-section">
+      <% if @products.any? %>
+        <div class="products-grid">
+          <% @products.each do |product| %>
+            <div class="product-card">
+              <%= link_to product_path(product) do %>
+                <% if product.image.attached? %>
+                  <%= image_tag product.image %>
+                <% else %>
+                  <%= image_tag "placeholder.png" %>
+                <% end %>
+                <h3><%= product.name %></h3>
+              <% end %>
+              <p><%= number_to_currency(product.price_cents / 100.0) %></p>
+              <%= button_to "Add to Cart", cart_items_path(product_id: product.id), method: :post, class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="empty-state">
+          <p>No product found</p>
+        </div>
+      <% end %>
+    </div>
+
+    <% if user_signed_in? && @cart %>
+      <div class="cart-sidebar">
+        <h2>Your Cart</h2>
+        <% if @cart.cart_items.any? %>
+          <ul class="cart-items">
+            <% @cart.cart_items.each do |item| %>
+              <li class="cart-item">
+                <div class="cart-item-name"><%= item.product.name %></div>
+                <div class="cart-item-detail">Quantity: <%= item.quantity %></div>
+                <div class="cart-item-detail">Price: <%= number_to_currency(item.total_price) %></div>
+                <%= button_to 'Remove', remove_from_cart_path(item), method: :delete, class: "btn btn-danger btn-small" %>
+              </li>
+            <% end %>
+          </ul>
+          <p class="cart-total">
+            Total: <%= number_to_currency(@cart.total_price) %>
+          </p>
+          <%= button_to 'Checkout', orders_path, method: :post, class: "cart-checkout" %>
+          <%= link_to 'View Full Cart', cart_path, class: "text-center", style: "display: block; margin-top: 10px;" %>
+        <% else %>
+          <p class="cart-empty">Your cart is empty.</p>
+        <% end %>
       </div>
     <% end %>
   </div>
-<% else %>
-  <p>No product found</p>
-<% end %>
-
-<% if user_signed_in? %>
-  <p>Hello, <%= current_user.email %></p>
-  <%= link_to 'My Cart', cart_path %> |
-  <% if current_user.admin? %>
-    <%= link_to 'Admin Products', admin_products_path %>
-  <% else %>
-    <%= link_to 'Products', products_path %>
-  <% end %>
-  <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete } %>
-<% else %>
-  <%= link_to 'Sign In', new_user_session_path %> |
-  <%= link_to 'Sign Up', new_user_registration_path %>
-<% end %>
+</div>
