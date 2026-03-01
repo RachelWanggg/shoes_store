@@ -41,5 +41,4 @@ This is a Ruby on Rails application for managing an online shoes store. It suppo
 - Product images are managed by Active Storage and stored in the `storage/` directory.
 - Sensitive files (credentials, database, etc.) are excluded from version control via `.gitignore`.
 
-## License
-MIT
+
