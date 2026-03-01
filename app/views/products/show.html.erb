@@ -1,10 +1,15 @@
-<h1><%= @product.name %></h1>
-<p><%= @product.description %></p>
-<p>Price: <%= number_to_currency(@product.price_cents / 100.0) %></p>
-<p>Stock: <%= @product.stock %></p>
-<% if @product.image.attached? %>
-  <%= image_tag @product.image, width: 300 %>
-<% end %>
-
-<%= button_to 'Add to Cart', add_to_cart_path(@product), method: :post %>
-<%= link_to 'Back to Products', products_path %>
+<div class="container">
+  <div class="product-show">
+    <h1><%= @product.name %></h1>
+    <% if @product.image.attached? %>
+      <%= image_tag @product.image %>
+    <% end %>
+    <div class="product-info">
+      <p><%= @product.description %></p>
+      <p class="product-price">Price: <%= number_to_currency(@product.price_cents / 100.0) %></p>
+      <p>Stock: <%= @product.stock %></p>
+    </div>
+    <%= button_to 'Add to Cart', add_to_cart_path(@product), method: :post, class: "btn btn-primary" %>
+    <%= link_to 'Back to Products', products_path, class: "btn btn-primary mt-20", style: "display: inline-block;" %>
+  </div>
+</div>

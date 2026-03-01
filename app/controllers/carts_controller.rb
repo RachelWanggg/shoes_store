@@ -5,6 +5,11 @@ class CartsController < ApplicationController
     @cart = current_cart
   end
 
+  def empty
+    current_cart.cart_items.destroy_all
+    redirect_to cart_path, notice: "Cart emptied!"
+  end
+
   def checkout
     cart = current_cart
     order = Order.create(user: current_user, total_cents: cart.total_cents)

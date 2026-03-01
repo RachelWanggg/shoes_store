@@ -1,33 +1,50 @@
-<h1>Admin Products</h1>
+<div class="container">
+  <div class="header">
+    <h1>Admin Products</h1>
+    <div class="nav-links">
+      <%= link_to 'New Product', new_admin_product_path, class: "btn btn-primary" %>
+      <%= link_to 'Back to Products', products_path %>
+      <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
+    </div>
+  </div>
 
-<%= link_to 'New Product', new_admin_product_path %>
+  <div class="admin-table">
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Stock</th>
+        <th>Actions</th>
+      </tr>
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Price</th>
-    <th>image</th>
-    <th>Stock</th>
-    <th>Actions</th>
-  </tr>
-
-  <% @products.each do |product| %>
-    <tr>
-      <td><%= product.name %></td>
-      <td><%= number_to_currency(product.price_cents / 100.0) %></td>
-      <td><%= image_tag product.image, width: 60 %></td>
-      <td><%= product.stock %></td>
-      <td>
-      <%= link_to 'Show', admin_product_path(product) %> |
-      <%= link_to 'Edit', edit_admin_product_path(product) %> |
-      <%= button_to 'Delete', admin_product_path(product),
-              method: :delete,
-              data: { confirm: 'Are you sure?' } %>
-      </td>
-    </tr>
-  <% end %>
-</table>
-<%= link_to 'Logout', destroy_user_session_path, method: :delete %>
+      <% @products.each do |product| %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= number_to_currency(product.price_cents / 100.0) %></td>
+          <td>
+            <% if product.image.attached? %>
+              <%= image_tag product.image %>
+            <% else %>
+              <span>No image</span>
+            <% end %>
+          </td>
+          <td><%= product.stock %></td>
+          <td>
+            <div class="admin-actions">
+              <%= link_to 'Show', admin_product_path(product), class: "btn btn-primary btn-small" %>
+              <%= link_to 'Edit', edit_admin_product_path(product), class: "btn btn-primary btn-small" %>
+              <%= button_to 'Delete', admin_product_path(product),
+                      method: :delete,
+                      data: { confirm: 'Are you sure?' },
+                      class: "btn btn-danger btn-small" %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
 
 
 

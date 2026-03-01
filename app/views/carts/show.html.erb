@@ -1,22 +1,33 @@
-<h1>Your Cart</h1>
-<% if @cart.cart_items.any? %>
-  <ul>
-    <% @cart.cart_items.each do |item| %>
-      <li>
-        <%= item.product.name %> x <%= item.quantity %>
-        (<%= number_to_currency(item.total_price) %>)
-        <%= button_to 'Remove', remove_from_cart_path(item), method: :delete %>
-        <% if item.product.image.attached? %>
-          <%= image_tag item.product.image, width: 300%>
-        <% else %>
-          <%= image_tag "placeholder.png", width: 300, height: 300 %>
+<div class="container">
+  <div class="cart-page">
+    <h1>Your Cart</h1>
+    <% if @cart.cart_items.any? %>
+      <ul>
+        <% @cart.cart_items.each do |item| %>
+          <li>
+            <% if item.product.image.attached? %>
+              <%= image_tag item.product.image %>
+            <% else %>
+              <%= image_tag "placeholder.png" %>
+            <% end %>
+            <div class="item-info">
+              <h3><%= item.product.name %></h3>
+              <p>Quantity: <%= item.quantity %></p>
+              <p>Price: <%= number_to_currency(item.total_price) %></p>
+            </div>
+            <%= button_to 'Remove', remove_from_cart_path(item), method: :delete, class: "btn btn-danger" %>
+          </li>
         <% end %>
-      </li>
+      </ul>
+      <p class="cart-total">Total: <%= number_to_currency(@cart.total_price) %></p>
+      <%= button_to 'Checkout', orders_path, method: :post, class: "btn btn-success" %>
+      <%= button_to 'Empty Cart', empty_cart_path, method: :delete, class: "btn btn-success" %>
+      <%= link_to 'Back to Products', products_path, class: "btn btn-primary mt-20", style: "display: inline-block;" %>
+    <% else %>
+      <div class="empty-state">
+        <p>Your cart is empty.</p>
+        <%= link_to 'Back to Products', products_path, class: "btn btn-primary" %>
+      </div>
     <% end %>
-  </ul>
-  <p><strong>Total:</strong> <%= number_to_currency(@cart.total_price) %></p>
-  <%= button_to 'Checkout', orders_path, method: :post %>
-  <%= link_to 'Back to Products', products_path %>
-<% else %>
-  <p>Your cart is empty.</p>
-<% end %>
+  </div>
+</div>

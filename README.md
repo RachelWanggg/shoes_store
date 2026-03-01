@@ -1,24 +1,45 @@
-# README
+# Shoes Store
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a Ruby on Rails application for managing an online shoes store. It supports product listings, shopping cart, orders, and admin management.
 
-Things you may want to cover:
+## Requirements
+- Ruby 3.x
+- Rails 8.1.1
+- SQLite3 (default for development)
 
-* Ruby version
+## Setup
+1. Install dependencies:
+   ```bash
+   bundle install
+   ```
+2. Prepare the database:
+   ```bash
+   bin/rails db:prepare
+   ```
+3. Start the development server:
+   ```bash
+   bin/dev
+   ```
+   The app will run at http://localhost:3000
 
-* System dependencies
+## Features
+- Product catalog with images
+- Shopping cart
+- Order management
+- User authentication (Devise)
+- Admin dashboard
 
-* Configuration
+## Project Structure
+- `app/models` - Data models
+- `app/controllers` - Controllers
+- `app/views` - HTML views
+- `app/assets` - Images, stylesheets, JavaScript
+- `db/migrate` - Database migrations
+- `storage/` - Active Storage files (product images)
 
-* Database creation
+## Notes
+- Product images are managed by Active Storage and stored in the `storage/` directory.
+- Sensitive files (credentials, database, etc.) are excluded from version control via `.gitignore`.
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## License
+MIT

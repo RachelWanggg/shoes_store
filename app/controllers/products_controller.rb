@@ -6,6 +6,8 @@ class ProductsController < ApplicationController
     
     @products = Product.search(@query, min_price: @min_price, max_price: @max_price)
                        .order(:name)
+    
+    @cart = current_cart if user_signed_in?
   end
 
   def show
